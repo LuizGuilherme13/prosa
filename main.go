@@ -3,15 +3,20 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fs)
 
-	log.Println("Listening on :8080...")
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
+	log.Printf("Listening on :%s...\n", port)
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
 	}
 }
